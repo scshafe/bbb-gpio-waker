@@ -21,7 +21,7 @@
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("GPIO driver for detecting PIR motion sensor");
 
-//   locations given by the 4D Cape schematic: https://resources.4dsystems.com.e
+//   locations given by the 4D Cape schematic: https://resources.4dsystems.com
 /*
     motion_sensor_detector_device {
                 compatible = "scshafe,my_test_driver";
@@ -110,7 +110,7 @@ static int pir_ms_release(struct inode *inode, struct file *file)
 
 static ssize_t pir_ms_read(struct file *filp, char __user *buf, size_t len, loff_t *off)
 {                                                                               
-    pr_info("MYDRIVE:  reading len: [%d]  offset: [%d]\n", len, *off);          
+    pr_info("YEET:  reading len: [%d]  offset: [%d]\n", len, *off);          
     ssize_t retval;                                                             
     // if (mutex_lock_interruptible(&dev->lock))                                
         //              return -ERESTARTSYS;                                      �����   ������������������������������                     
@@ -137,13 +137,15 @@ static ssize_t pir_ms_read(struct file *filp, char __user *buf, size_t len, loff
 
 
 static irqreturn_t motion_detected_irq(int irq, void *dev_id)                   
-{                                                                               
+{
+    pr_info("YEET: motion    detected\n");                                                                                
     set_motion_value(1);                                                        
     return IRQ_HANDLED;                                                         
 }                                                                               
 
 static irqreturn_t motion_undetected_irq(int irq, void *dev_id)                 
-{                                                                               
+{
+    pr_info("YEET: motion un-detected\n");                                                                                
     set_motion_value(0);                                                        
     return IRQ_HANDLED;                                                         
 }                                                                               
@@ -159,8 +161,27 @@ static int motion_sensor_probe(struct platform_device *pdev)
     my_led = gpiod_get(dev, "pir-ms-test-led", GPIOD_OUT_HIGH);                 
 
 
-    pir_ms_up = gpiod_get(dev, "pir-ms-up", GPIOD_IN);                          
-    pir_ms_lo = gpiod_get(dev, "pir-ms-lo", GPIOD_IN);                          
+    pir_ms_up = gpiod_get(dev, "pir-ms-up", GPIOD_IN);
+
+    if (IS_ERR(pir_ms_up))
+    {
+        pr_err("YEET: Error could not get GPIO for up signal\n");
+    }
+    else
+    {
+        pr_info("YEET: Successfully initialized GPIO up\n");
+    }
+
+    pir_ms_lo = gpiod_get(dev, "pir-ms-lo", GPIOD_IN);   
+
+    if (IS_ERR(pir_ms_lo))
+    {
+        pr_err("YEET: Error could not get GPIO for lo signal\n");
+    }
+    else
+    {
+        pr_info("YEET: Successfully initialized GPIO lo\n");
+    }                    
 
     set_motion_value(0);                                                        
     waiting_on_trigger = false;                                                 

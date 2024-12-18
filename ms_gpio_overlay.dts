@@ -1,36 +1,34 @@
 /dts-v1/;
 /plugin/;
 
-// / {
-//     fragment@0 {
-//         target = <&leds>;
-//         __overlay__ {
-
-        
-//             motion_sensor_detector_device {
-//                 compatible = "scshafe,my_test_driver";
-
-//                 pir-ms-up-gpios = <0x2f 0x03 0x00>;        // gpio3  == gpio 0_3
-//                 pir-ms-lo-gpios = <0x5a 0x10 0x00>;        // gpio48 == gpio 1_"
-
-//                 pir-ms-test-led-gpios = <0x5a 0x11 0x00>;  // gpio49 == gpio 1_"
-//             };
-//         };
-//     };
-
-// };
-
-
-
 // This is the "reference syntax" recommended by Android (but not supported with my dtc compiler)
 
-&/ {
-    motion_sensor_detector_device {
+&{/} {
+    motion_sensor_detector {
         compatible = "scshafe,my_test_driver";
 
-        pir-ms-up-gpios = <0x2f 0x03 0x00>;        // gpio3  == gpio 0_3
-        pir-ms-lo-gpios = <0x5a 0x10 0x00>;        // gpio48 == gpio 1_"
+        pir-ms-up-gpios = <0x33 0x03 0x00>;        // gpio3  == gpio 0_3
+        pir-ms-lo-gpios = <0x42 0x10 0x00>;        // gpio48 == gpio 1_"
 
-        pir-ms-test-led-gpios = <0x5a 0x11 0x00>;  // gpio49 == gpio 1_"
+        
     };
 };
+
+// "P8_25 [mmc1_dat0]\0
+// [mmc1_dat1]\0
+// P8_5 [mmc1_dat2]\0
+// P8_6 [mmc1_dat3]\0
+// P8_23 [mmc1_dat4]\0
+// P8_22 [mmc1_dat5]\0
+// P8_3 [mmc1_dat6]\0
+// P8_4 [mmc1_dat7]\0
+// NC\0
+// NC\0
+// NC\0
+// NC\0
+// P8_12\0
+// P8_11\0
+// P8_16\0
+// P8_15\0
+// P9_15A\0
+// P9_23\0P9_14 [ehrpwm1a]\0P9_16 [ehrpwm1b]\0[emmc rst]\0[usr0 led]\0[usr1 led]\0[usr2 led]\0[usr3 led]\0[hdmi irq]\0[usb vbus oc]\0[hdmi audio]\0P9_12\0P8_26\0P8_21 [emmc]\0P8_20 [emmc]";

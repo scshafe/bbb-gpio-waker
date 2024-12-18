@@ -1,0 +1,4 @@
+#! /bin/bash
+
+dtc -@ -I dts -O dtb -o ms_gpio_overlay.dtbo ms_gpio_overlay.dts
+scp ms_gpio_overlay.dtbo debian@192.168.6.2:/home/debian/gpio-waker/ms_gpio_overlay.dtbo
