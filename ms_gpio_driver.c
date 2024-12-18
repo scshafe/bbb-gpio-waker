@@ -154,15 +154,10 @@ static irqreturn_t motion_undetected_irq(int irq, void *dev_id)
 static int motion_sensor_probe(struct platform_device *pdev)                    
 {                                                                               
     int retval;                                                                 
-    struct device *dev = &pdev->dev;                                            
-    // printk(KERN_INFO, "YEET: Initializing GPIO PIR motion sensor\n");        
-    pr_info("YEET: initalizing GPIO pir ms\n");                                 
-
-    my_led = gpiod_get(dev, "pir-ms-test-led", GPIOD_OUT_HIGH);                 
-
+    struct device *dev = &pdev->dev;                                                  
+    pr_info("YEET: initalizing GPIOs for motion-sensor\n");                                 
 
     pir_ms_up = gpiod_get(dev, "pir-ms-up", GPIOD_IN);
-
     if (IS_ERR(pir_ms_up))
     {
         pr_err("YEET: Error could not get GPIO for up signal\n");
@@ -173,10 +168,10 @@ static int motion_sensor_probe(struct platform_device *pdev)
     }
 
     pir_ms_lo = gpiod_get(dev, "pir-ms-lo", GPIOD_IN);   
-
     if (IS_ERR(pir_ms_lo))
     {
         pr_err("YEET: Error could not get GPIO for lo signal\n");
+        // return 1;
     }
     else
     {
@@ -189,12 +184,44 @@ static int motion_sensor_probe(struct platform_device *pdev)
     // mutex_init(&pir_ms_lock);                                                
 
 
-    pir_ms_detected_irq = gpiod_to_irq(pir_ms_up);                              
-    pr_info("YEET: ms detected irq number: %d", pir_ms_detected_irq);   
-         retval = request_threaded_irq(pir_ms_undetected_irq, NULL,
-                            motion_undetected_irq,
-                            IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-                            "my_test_driver", NULL);
+    pir_ms_detected_irq = gpiod_to_irq(pir_ms_up);  
+    if (pir_ms_detected_irq < 0)
+    {
+        pr_err("YEET: error getting detected irq number: %d", pir_ms_detected_irq);
+        // return 1;
+    }
+    else
+    {
+        pr_info("YEET: ms detected irq number: %d", pir_ms_detected_irq);  
+    }
+
+    
+    retval = request_threaded_irq(pir_ms_detected_irq,
+                                  NULL,
+                                  motion_detected_irq,
+                                  IRQF_TRIGGER_RISING |IRQF_ONESHOT,
+                                  "my_test_driver",
+                                  NULL);
+
+
+    pir_ms_undetected_irq = gpiod_to_irq(pir_ms_lo);
+    if (pir_ms_undetected_irq < 0)
+    {
+        pr_err("YEET: error getting undetected irq number: %d", pir_ms_undetected_irq);
+        return 1;
+    }
+    else
+    {
+        pr_info("YEET: ms undetected irq number: %d", pir_ms_undetected_irq);  
+    }
+
+    pr_info("YEET: ms undetected irq number: %d", pir_ms_undetected_irq);  
+    retval = request_threaded_irq(pir_ms_undetected_irq, 
+                                  NULL,
+                                  motion_undetected_irq,
+                                  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+                                  "my_test_driver", 
+                                  NULL);
 
 
     if((alloc_chrdev_region(&dev_numbers, 0, 1, "pir_ms_Dev")) <0){
