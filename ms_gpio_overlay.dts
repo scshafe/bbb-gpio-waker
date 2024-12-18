@@ -1,0 +1,36 @@
+/dts-v1/;
+/plugin/;
+
+// / {
+//     fragment@0 {
+//         target = <&leds>;
+//         __overlay__ {
+
+        
+//             motion_sensor_detector_device {
+//                 compatible = "scshafe,my_test_driver";
+
+//                 pir-ms-up-gpios = <0x2f 0x03 0x00>;        // gpio3  == gpio 0_3
+//                 pir-ms-lo-gpios = <0x5a 0x10 0x00>;        // gpio48 == gpio 1_"
+
+//                 pir-ms-test-led-gpios = <0x5a 0x11 0x00>;  // gpio49 == gpio 1_"
+//             };
+//         };
+//     };
+
+// };
+
+
+
+// This is the "reference syntax" recommended by Android (but not supported with my dtc compiler)
+
+&/ {
+    motion_sensor_detector_device {
+        compatible = "scshafe,my_test_driver";
+
+        pir-ms-up-gpios = <0x2f 0x03 0x00>;        // gpio3  == gpio 0_3
+        pir-ms-lo-gpios = <0x5a 0x10 0x00>;        // gpio48 == gpio 1_"
+
+        pir-ms-test-led-gpios = <0x5a 0x11 0x00>;  // gpio49 == gpio 1_"
+    };
+};

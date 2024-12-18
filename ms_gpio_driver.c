@@ -66,7 +66,7 @@ static const struct of_device_id gpiod_dt_ids[] = {
 
 static int      pir_ms_open(struct inode *inode, struct file *file);
 static int      pir_ms_release(struct inode *inode, struct file *file);
-static ssize_t  pir_ms_read(struct file *filp, char __user *buf, size_t len,lof;
+static ssize_t  pir_ms_read(struct file *filp, char __user *buf, size_t len, loff_t *off);
 
 
 static struct file_operations fops =
@@ -108,7 +108,7 @@ static int pir_ms_release(struct inode *inode, struct file *file)
 }                                                                               
 
 
-static ssize_t pir_ms_read(struct file *filp, char __user *buf, size_t len, lof)
+static ssize_t pir_ms_read(struct file *filp, char __user *buf, size_t len, loff_t *off)
 {                                                                               
     pr_info("MYDRIVE:  reading len: [%d]  offset: [%d]\n", len, *off);          
     ssize_t retval;                                                             
